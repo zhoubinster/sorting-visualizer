@@ -232,8 +232,8 @@ const App = () => {
         </div>
         <div className="col-3">
           <select className="form-select" onChange={(e) => setSpeed(e.target.value)}>
-            <option value="500">排序速度 - 慢</option>
-            <option value="200">排序速度 - 快</option>
+            <option value="500">Speed - slow</option>
+            <option value="200">speed - fast</option>
           </select>
         </div>
         <div className="col-3">
