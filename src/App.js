@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 import { quickSort, mergeSort, bubbleSort } from './SortAlgorithm';
 
@@ -18,7 +18,7 @@ const sleep = (time) => {
 const App = () => {
   const [array, setArray] = useState([]);
   const [algorithm, setAlgorithm] = useState('quick');
-  const [speed, setSpeed] = useState('slow');
+  const [speed, setSpeed] = useState('500');
   const [algorithmCode, setAlgorithmCode] = useState('');
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const App = () => {
       } else {
         clearInterval(animation);
       }
-    }, 1000); // 延迟时间，单位：毫秒
+    }, speed); // 延迟时间，单位：毫秒
   };
 
   const animateMergeSort = (arr, left = 0, right = arr.length - 1) => {
@@ -170,7 +170,7 @@ const App = () => {
       } else {
         clearInterval(animation);
       }
-    }, 1000); // 设置延迟时间，单位：毫秒
+    }, speed); // 设置延迟时间，单位：毫秒
   };
 
   const animateQuickSort = (arr) => {
@@ -212,44 +212,57 @@ const App = () => {
       } else {
         clearInterval(animation);
       }
-    }, 1000); // 设置延迟时间，单位：毫秒
+    }, speed); // 设置延迟时间，单位：毫秒
   };
 
 
   return (
-    <div className="container">
-      <div className="controls">
-        <button onClick={generateArray}>生成待排序的数组</button>
-        <select onChange={handleAlgorithmChange} value={algorithm}>
-          <option value="">选择排序算法</option>
-          <option value="quick">Quick Sort</option>
-          <option value="merge">Merge Sort</option>
-          <option value="bubble">Bubble Sort</option>
-        </select>
-        <button onClick={startSorting}>开始排序</button>
-        <select onChange={(e) => setSpeed(e.target.value)}>
-          <option value="slow">排序速度 - 慢</option>
-          <option value="fast">排序速度 - 快</option>
-        </select>
-      </div>
-      <div className="separator"></div> {/* 分割条 */}
-      <div className="displayArea">
-        <div className="algorithmCode">
-          <pre>{algorithmCode}</pre>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-3">
+          <button className="btn btn-primary" onClick={generateArray}>GenerateNewArray</button>
         </div>
-        {array.map((value, index) => (
-          <div key={index} className="barContainer">
-            <div
-              className="bar"
-              style={{
-                height: `${value * 5}px`,
-                transitionDuration: speed === 'slow' ? '0.5s' : '0.1s', // 根据速度调整动画时长
-              }}
-            ></div>
-            <span className="barValue">{value}</span> {/* 显示数字的元素 */}
-          </div>
-        ))}
+        <div className="col-3">
+          <select className="form-select" onChange={handleAlgorithmChange} value={algorithm}>
+            <option value="">Algorithm Selected</option>
+            <option value="quick">Quick Sort</option>
+            <option value="merge">Merge Sort</option>
+            <option value="bubble">Bubble Sort</option>
+          </select>
+        </div>
+        <div className="col-3">
+          <select className="form-select" onChange={(e) => setSpeed(e.target.value)}>
+            <option value="500">排序速度 - 慢</option>
+            <option value="200">排序速度 - 快</option>
+          </select>
+        </div>
+        <div className="col-3">
+          <button className="btn btn-primary" onClick={startSorting}>start</button>
+        </div>
+      </div>
 
+      <div className="separator"></div> {/* 分割条 */}
+      <div className="row">
+        <div className="col">
+          <div className="displayArea">
+            <div className="algorithmCode">
+              <pre>{algorithmCode}</pre>
+            </div>
+            {array.map((value, index) => (
+              <div key={index} className="barContainer">
+                <div
+                  className="bar"
+                  style={{
+                    height: `${value * 5}px`,
+                    transitionDuration: speed === 'slow' ? '0.5s' : '0.1s', // 根据速度调整动画时长
+                  }}
+                ></div>
+                <span className="barValue">{value}</span> {/* 显示数字的元素 */}
+              </div>
+            ))}
+
+          </div>
+        </div>
       </div>
     </div>
   );
