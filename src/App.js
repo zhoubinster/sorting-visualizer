@@ -222,22 +222,24 @@ const App = () => {
   };
 
   const animateQuickSort = (arr) => {
-    const partition = (arr, left, right) => {
+    const partition = (arr, left, right, temp) => {
       const pivot = arr[right]; // 选择数组最后一个元素作为基准值
       let i = left - 1;
       for (let j = left; j < right; j++) {
         if (arr[j] < pivot) {
           i++;
           [arr[i], arr[j]] = [arr[j], arr[i]]; // 将小于基准值的元素交换到左侧
+          temp.push([...arr]);
         }
       }
       [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]]; // 将基准值交换到正确的位置
+      temp.push([...arr]);
       return i + 1; // 返回基准值的索引
     };
 
     const quickSortRec = (arr, low, high, temp) => {
       if (low < high) {
-        const pi = partition(arr, low, high);
+        const pi = partition(arr, low, high, temp);
 
         quickSortRec(arr, low, pi - 1, temp);
         quickSortRec(arr, pi + 1, high, temp);
