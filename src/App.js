@@ -20,7 +20,7 @@ const App = () => {
   const [playFinished, setPlayFinished] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tempArray, setTempArray] = useState([]);// 用于保存排序过程中的中间结果
-  const [additionalArray, setAdditionalArray] = useState([])
+  const [additionalArray, setAdditionalArray] = useState([]);
 
   useEffect(() => {
     generateArray();
