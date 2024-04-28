@@ -20,12 +20,25 @@ const App = () => {
   const [algorithm, setAlgorithm] = useState('quick');
   const [speed, setSpeed] = useState('500');
   const [algorithmCode, setAlgorithmCode] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     generateArray();
     setAlgorithm(algorithm);
     setCode(algorithm);
   }, []);
+
+  const handlePreviousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
 
   const generateArray = () => {
     const newArray = generateRandomArray(20);
@@ -238,9 +251,7 @@ const App = () => {
             <option value="200">speed - fast</option>
           </select>
         </div>
-        <div className="col-2">
-          <button className="btn btn-primary" onClick={startSorting}>start</button>
-        </div>
+
         <div className="col-2">
         </div>
       </div>
@@ -250,22 +261,31 @@ const App = () => {
       <div className="row">
         <div className="col">
           <div className="displayArea">
-            <div className="algorithmCode">
-              <pre>{algorithmCode}</pre>
+            <div className='leftArea'>
+              <div className="targetArray">
+                <div>{"Target Array:  "+array.toString()}</div>
+                <div>
+                  <button className="btn btn-primary" onClick={startSorting}>start</button>
+                </div>
+              </div>
+              <div className='leftSeparator'></div>
+              <div className="algorithmCode">
+                <pre>{"Algorithm Code:\n\n"+algorithmCode}</pre>
+              </div>
             </div>
             <div className="rightArea">
-            {array.map((value, index) => (
-              <div key={index} className="barContainer">
-                <div
-                  className="bar"
-                  style={{
-                    height: `${value * 5}px`,
-                    transitionDuration: speed === 'slow' ? '0.5s' : '0.1s', // 根据速度调整动画时长
-                  }}
-                ></div>
-                <span className="barValue">{value}</span> {/* 显示数字的元素 */}
-              </div>
-            ))}
+              {array.map((value, index) => (
+                <div key={index} className="barContainer">
+                  <div
+                    className="bar"
+                    style={{
+                      height: `${value * 5}px`,
+                      transitionDuration: speed === 500 ? '0.5s' : '0.1s', // 根据速度调整动画时长
+                    }}
+                  ></div>
+                  <span className="barValue">{value}</span> {/* 显示数字的元素 */}
+                </div>
+              ))}
             </div>
           </div>
         </div>
