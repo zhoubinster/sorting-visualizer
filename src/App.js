@@ -248,6 +248,7 @@ const App = () => {
             <div className="algorithmCode">
               <pre>{algorithmCode}</pre>
             </div>
+            <div className="rightArea">
             {array.map((value, index) => (
               <div key={index} className="barContainer">
                 <div
@@ -260,7 +261,7 @@ const App = () => {
                 <span className="barValue">{value}</span> {/* 显示数字的元素 */}
               </div>
             ))}
-
+            </div>
           </div>
         </div>
       </div>

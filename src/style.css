@@ -21,9 +21,14 @@
   margin: 0 2px;
   transition: height 0.2s ease-in-out;
 }
-
+.rightArea{
+  width: 50%;
+  display: flex;
+  margin-bottom: 20px;
+}
 .barContainer {
   position: relative;
+  width: 30px;
 }
 
 .barValue {
