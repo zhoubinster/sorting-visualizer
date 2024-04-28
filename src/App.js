@@ -219,12 +219,12 @@ const App = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-4">
+        <div className="col-2">
         </div>
-        <div className="col-1">
+        <div className="col-2">
           <button className="btn btn-primary" onClick={generateArray}>GenerateNewArray</button>
         </div>
-        <div className="col-1">
+        <div className="col-2">
           <select className="form-select" onChange={handleAlgorithmChange} value={algorithm}>
             <option value="">Algorithm Selected</option>
             <option value="quick">Quick Sort</option>
@@ -232,16 +232,16 @@ const App = () => {
             <option value="bubble">Bubble Sort</option>
           </select>
         </div>
-        <div className="col-1">
+        <div className="col-2">
           <select className="form-select" onChange={(e) => setSpeed(e.target.value)}>
             <option value="500">Speed - slow</option>
             <option value="200">speed - fast</option>
           </select>
         </div>
-        <div className="col-1">
+        <div className="col-2">
           <button className="btn btn-primary" onClick={startSorting}>start</button>
         </div>
-        <div className="col-4">
+        <div className="col-2">
         </div>
       </div>
 
