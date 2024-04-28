@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-import { quickSort, mergeSort, bubbleSort, insertionSort } from './SortAlgorithm';
+import { quickSort, mergeSort, bubbleSort, insertionSort, selectionSort } from './SortAlgorithm';
 
 const generateRandomArray = (size) => {
   const array = [];
@@ -127,6 +127,9 @@ const App = () => {
       case 'insert':
         animateInsertionSort(newArray);
         break;
+      case 'select':
+        animateSelectionSort(newArray);
+        break; 
       default:
         break;
     }
@@ -148,6 +151,9 @@ const App = () => {
         break;
       case 'insert':
         setAlgorithmCode(insertionSort.toString());
+        break;
+      case 'select':
+        setAlgorithmCode(selectionSort.toString());
         break;
       default:
         setAlgorithmCode('');
@@ -175,6 +181,28 @@ const App = () => {
         tempArray.push([...arr]);
       }
       arr[j + 1] = key;
+    }
+    if (!swapped) {
+      tempArray.push([...arr]);
+    }
+    playBack(tempArray);
+  };
+
+  const animateSelectionSort = (arr) => {
+    let swapped = false;
+    const n = arr.length;
+    for (let i = 0; i < n - 1; i++) {
+      let minIndex = i;
+      for (let j = i + 1; j < n; j++) {
+        if (arr[j] < arr[minIndex]) {
+          minIndex = j;
+        }
+      }
+      if (minIndex !== i) {
+        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+        tempArray.push([...arr]);
+        swapped = true;
+      }
     }
     if (!swapped) {
       tempArray.push([...arr]);
@@ -305,6 +333,7 @@ const App = () => {
             <option value="merge">Merge Sort</option>
             <option value="bubble">Bubble Sort</option>
             <option value="insert">Insert Sort</option>
+            <option value="select">Selection Sort</option>
           </select>
         </div>
         <div className="col-2">
