@@ -70,7 +70,6 @@ export const quickSort = (arr, left, right) => {
     for (let i = 0; i < len - 1; i++) {
       for (let j = 0; j < len - 1 - i; j++) {
         if (arr[j] > arr[j + 1]) {
-          // 如果前一个元素大于后一个元素，则交换它们的位置
           [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
         }
       }

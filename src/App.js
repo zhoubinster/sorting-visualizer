@@ -21,6 +21,7 @@ const App = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [tempArray, setTempArray] = useState([]);// 用于保存排序过程中的中间结果
   const [additionalArray, setAdditionalArray] = useState([]);
+  const [desc, setDesc] = useState('');
 
   useEffect(() => {
     generateArray();
@@ -33,6 +34,8 @@ const App = () => {
     setPlayFinished(false);
     setCurrentStep(0);
     setTempArray([]);
+    setAdditionalArray([]);
+    setDesc('');
   }
 
   const isPreviousButtonDisabled = () => {
@@ -77,6 +80,9 @@ const App = () => {
     const animation = setInterval(() => {
       if (index < tempArray.length) {
         setArray(tempArray[index]);
+        if(additionalArray.length > 0 && index < additionalArray.length) {
+          setDesc(additionalArray[index]);
+        }
         index++;
         setCurrentStep(index);
       } else {
@@ -257,10 +263,12 @@ const App = () => {
           i++;
           [arr[i], arr[j]] = [arr[j], arr[i]]; // 将小于基准值的元素交换到左侧
           temp.push([...arr]);
+          additionalArray.push("pivot:"+pivot+",left:"+left+",right:"+right+",i:"+i+",j:"+j);
         }
       }
       [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]]; // 将基准值交换到正确的位置
       temp.push([...arr]);
+      additionalArray.push("swap privot, from "+arr[i + 1]+" to "+ arr[right]+",i:"+(i+1));
       return i + 1; // 返回基准值的索引
     };
 
@@ -318,6 +326,7 @@ const App = () => {
             <div className='leftArea'>
               <div className="targetArray">
                 <div>{"Target Array:  " + array.toString()}</div>
+                <div>{"Runtime info:  "+desc}</div>
                 <div className='buttonGroup'>
                   <button className="btn btn-primary" onClick={startSorting} disabled={isStartButtonDisabled()}>start</button>
                   {/* Previous Step Button */}
