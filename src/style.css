@@ -64,6 +64,10 @@
   border-radius: 5px;
 }
 
+.buttonGroup {
+  flex-direction: row;
+}
+
 .leftSeparator {
   height: 2px; /* 分割条高度 */
   background-color: #ccc; /* 分割条颜色 */
@@ -88,4 +92,19 @@
   white-space: pre-wrap; /* 保留空格和换行 */
   font-family: monospace; /* 使用等宽字体 */
   font-size: 14px; /* 字体大小 */
+}
+
+.h4-font {
+    /* background: #2B6695; */
+    /* border-radius: 6px 6px 6px 6px; */
+    /* box-shadow: 0 0 0 1px #5F5A4B, 1px 1px 6px 1px rgba(10, 10, 0, 0.5); */
+    /* color: #FFFFFF; */
+    font-family:"微软雅黑", "宋体", "黑体", Arial;
+    font-size: 18px;
+    font-weight: bold;
+    height: 25px;
+    line-height: 25px;
+    /* margin: 18px 0 !important; */
+    /* padding: 8px 0 8px 5px; */
+    text-shadow: 2px 2px 3px #222222;
 }

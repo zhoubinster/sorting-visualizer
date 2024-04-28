@@ -11,16 +11,15 @@ const generateRandomArray = (size) => {
   return array;
 };
 
-const sleep = (time) => {
-  return new Promise((resolve) => setTimeout(resolve, time));
-}
-
 const App = () => {
   const [array, setArray] = useState([]);
   const [algorithm, setAlgorithm] = useState('quick');
   const [speed, setSpeed] = useState('500');
   const [algorithmCode, setAlgorithmCode] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
+  const [playFinished, setPlayFinished] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [tempArray, setTempArray] = useState([]);// 用于保存排序过程中的中间结果
 
   useEffect(() => {
     generateArray();
@@ -28,19 +27,67 @@ const App = () => {
     setCode(algorithm);
   }, []);
 
+  const resetVar =() => {
+    setIsPlaying(false);
+    setPlayFinished(false);
+    setCurrentStep(0);
+    setTempArray([]);
+  }
+
+  const isPreviousButtonDisabled = () => {
+    return isPlaying || (!playFinished && currentStep === 0);
+  };
+
+  const isNextButtonDisabled = () => {
+    return isPlaying || tempArray.length === 0 || (!playFinished && currentStep === tempArray.length - 1);
+  };
+
+  const isStartButtonDisabled = () => {
+    return isPlaying;
+  };
+
+  const isGenerateNewArrayButtonDisabled = () => {
+    return isPlaying;
+  };
+
   const handlePreviousStep = () => {
-    if (currentStep > 0) {
+    if (playFinished && currentStep > 0) {
+      console.log("before currentStep:" + currentStep);
+      setArray(tempArray[currentStep - 1]);
       setCurrentStep(currentStep - 1);
+      console.log("after currentStep:" + currentStep);
+      console.log("after tempArray:" + tempArray);
+      console.log("after tempArray:" + tempArray.length);
+
     }
   };
 
   const handleNextStep = () => {
-    if (currentStep < steps.length - 1) {
+    if (playFinished && currentStep < tempArray.length - 1) {
+      setArray(tempArray[currentStep + 1]);
       setCurrentStep(currentStep + 1);
     }
   };
 
+  const playBack = (tempArray) => {
+    let index = 0;
+    setCurrentStep(index);
+    setTempArray(tempArray);
+    const animation = setInterval(() => {
+      if (index < tempArray.length) {
+        setArray(tempArray[index]);
+        index++;
+        setCurrentStep(index);
+      } else {
+        clearInterval(animation);
+        setPlayFinished(true);
+        setIsPlaying(false);
+      }
+    }, speed);
+  }
+
   const generateArray = () => {
+    resetVar();
     const newArray = generateRandomArray(20);
     setArray(newArray);
     console.log("newArray:" + newArray);
@@ -53,6 +100,8 @@ const App = () => {
     }
     console.log("algorithm:" + algorithm);
     // setCode(algorithm); // 设置对应排序算法的代码
+    resetVar();
+    setIsPlaying(true);
 
     // 复制一份待排序的数组，避免直接修改原始数组
     const newArray = [...array];
@@ -72,8 +121,7 @@ const App = () => {
         break;
     }
     console.log("after sort:" + array);
-    setArray(newArray);
-
+    // setArray(newArray);
   };
 
   // 根据选择的排序算法设置对应的代码
@@ -103,25 +151,22 @@ const App = () => {
 
   const animateBubbleSort = (arr) => {
     let len = arr.length;
-    let swapped;
-    let i = 0;
-
-    const animation = setInterval(() => {
-      if (i < len - 1) {
-        swapped = false;
-        for (let j = 0; j < len - 1 - i; j++) {
-          if (arr[j] > arr[j + 1]) {
-            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-            swapped = true;
-          }
+    let swapped = false;
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - 1 - i; j++) {
+        if (arr[j] > arr[j + 1]) {
+          // 如果前一个元素大于后一个元素，则交换它们的位置
+          [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+          swapped = true;
+          tempArray.push([...arr]);
         }
-        // 更新界面显示的排序数组
-        setArray([...arr]);
-        i++;
-      } else {
-        clearInterval(animation);
       }
-    }, speed); // 延迟时间，单位：毫秒
+    }
+
+    if (!swapped) {
+      tempArray.push([...arr]);
+    }
+    playBack(tempArray);
   };
 
   const animateMergeSort = (arr, left = 0, right = arr.length - 1) => {
@@ -169,21 +214,11 @@ const App = () => {
       }
     };
 
-    // 用于保存排序过程中的中间结果
-    let tempArray = [];
     mergeSortRec(arr, 0, arr.length - 1, tempArray);
     console.log("tempArray:" + tempArray);
 
     // 通过循环逐步展示排序过程中的中间结果
-    let index = 0;
-    const animation = setInterval(() => {
-      if (index < tempArray.length) {
-        setArray(tempArray[index]);
-        index++;
-      } else {
-        clearInterval(animation);
-      }
-    }, speed); // 设置延迟时间，单位：毫秒
+    playBack(tempArray); // 设置延迟时间，单位：毫秒
   };
 
   const animateQuickSort = (arr) => {
@@ -212,30 +247,19 @@ const App = () => {
       }
     };
 
-    // 用于保存排序过程中的中间结果
-    let tempArray = [];
     quickSortRec(arr, 0, arr.length - 1, tempArray);
-
-    // 通过循环逐步展示排序过程中的中间结果
-    let index = 0;
-    const animation = setInterval(() => {
-      if (index < tempArray.length) {
-        setArray(tempArray[index]);
-        index++;
-      } else {
-        clearInterval(animation);
-      }
-    }, speed); // 设置延迟时间，单位：毫秒
+    playBack(tempArray);
   };
 
 
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-2">
+        <div className="col-3">
+          <h4 className='h4-font'>Sort Algorithm Visualizer</h4>
         </div>
         <div className="col-2">
-          <button className="btn btn-primary" onClick={generateArray}>GenerateNewArray</button>
+          <button className="btn btn-primary" onClick={generateArray} disabled={isGenerateNewArrayButtonDisabled()}>GenerateNewArray</button>
         </div>
         <div className="col-2">
           <select className="form-select" onChange={handleAlgorithmChange} value={algorithm}>
@@ -252,7 +276,7 @@ const App = () => {
           </select>
         </div>
 
-        <div className="col-2">
+        <div className="col-1">
         </div>
       </div>
 
@@ -263,14 +287,26 @@ const App = () => {
           <div className="displayArea">
             <div className='leftArea'>
               <div className="targetArray">
-                <div>{"Target Array:  "+array.toString()}</div>
+                <div>{"Target Array:  " + array.toString()}</div>
+                <div className='buttonGroup'>
+                  <button className="btn btn-primary" onClick={startSorting} disabled={isStartButtonDisabled()}>start</button>
+                  {/* Previous Step Button */}
+                  <p></p>
+                  <button className="btn btn-primary me-2" onClick={handlePreviousStep} disabled={isPreviousButtonDisabled()}>
+                    Previous Step
+                  </button>
+                  {/* Next Step Button */}
+                  <button className="btn btn-primary" onClick={handleNextStep} disabled={isNextButtonDisabled()}>
+                    Next Step
+                  </button>
+                </div>
                 <div>
-                  <button className="btn btn-primary" onClick={startSorting}>start</button>
+
                 </div>
               </div>
               <div className='leftSeparator'></div>
               <div className="algorithmCode">
-                <pre>{"Algorithm Code:\n\n"+algorithmCode}</pre>
+                <pre>{"Algorithm Code:\n\n" + algorithmCode}</pre>
               </div>
             </div>
             <div className="rightArea">
