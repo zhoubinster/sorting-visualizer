@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
-import { quickSort, mergeSort, bubbleSort } from './SortAlgorithm';
+import { quickSort, mergeSort, bubbleSort, insertionSort } from './SortAlgorithm';
 
 const generateRandomArray = (size) => {
   const array = [];
@@ -20,6 +20,7 @@ const App = () => {
   const [playFinished, setPlayFinished] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tempArray, setTempArray] = useState([]);// 用于保存排序过程中的中间结果
+  const [additionalArray, setAdditionalArray] = useState([])
 
   useEffect(() => {
     generateArray();
@@ -27,7 +28,7 @@ const App = () => {
     setCode(algorithm);
   }, []);
 
-  const resetVar =() => {
+  const resetVar = () => {
     setIsPlaying(false);
     setPlayFinished(false);
     setCurrentStep(0);
@@ -117,6 +118,9 @@ const App = () => {
       case 'bubble':
         animateBubbleSort(newArray);
         break;
+      case 'insert':
+        animateInsertionSort(newArray);
+        break;
       default:
         break;
     }
@@ -136,6 +140,9 @@ const App = () => {
       case 'bubble':
         setAlgorithmCode(bubbleSort.toString());
         break;
+      case 'insert':
+        setAlgorithmCode(insertionSort.toString());
+        break;
       default:
         setAlgorithmCode('');
         break;
@@ -147,6 +154,26 @@ const App = () => {
     const selectedAlgorithm = e.target.value;
     setAlgorithm(selectedAlgorithm);
     setCode(selectedAlgorithm); // 设置对应排序算法的代码
+  };
+
+  const animateInsertionSort = (arr) => {
+    let swapped = false;
+    const n = arr.length;
+    for (let i = 1; i < n; i++) {
+      let key = arr[i];
+      let j = i - 1;
+      while (j >= 0 && arr[j] > key) {
+        arr[j + 1] = arr[j];
+        j = j - 1;
+        swapped = true;
+        tempArray.push([...arr]);
+      }
+      arr[j + 1] = key;
+    }
+    if (!swapped) {
+      tempArray.push([...arr]);
+    }
+    playBack(tempArray);
   };
 
   const animateBubbleSort = (arr) => {
@@ -269,6 +296,7 @@ const App = () => {
             <option value="quick">Quick Sort</option>
             <option value="merge">Merge Sort</option>
             <option value="bubble">Bubble Sort</option>
+            <option value="insert">Insert Sort</option>
           </select>
         </div>
         <div className="col-2">
